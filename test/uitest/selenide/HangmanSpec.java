@@ -34,20 +34,41 @@ public class HangmanSpec extends AbstractHangmanTest {
   }
 
   private String result() {
-    ElementsCollection providerCards = $$("div[data-testid='components.ProviderCard.providerRatingBadge']");
+    ElementsCollection providerCards = $$("div[data-testid='components.ProviderCard.view']");
 
     List<Map<String, String>> providerInfoList = providerCards.stream().map(card -> {
-      String name = card.$("span.provider-name-class").getText();
-      String rating = card.$("span:nth-of-type(2)").getText();
-      String reviews = card.$("span:nth-of-type(3)").getText();
-      String imageUrl = card.parent().$("img").getAttribute("src");
 
-      return Map.of(
-              "Name", name,
-              "Rating", rating,
-              "Reviews", reviews,
-              "Image URL", imageUrl
-      );
+      try {
+        if (card.$("span[data-testid='components.ProviderCard.providerName']").exists()
+        && card.$("div[data-testid='components.ProviderCard.providerRatingBadge'] span:nth-of-type(2)").exists()
+        && card.$("div[data-testid='components.ProviderCard.providerRatingBadge'] span:nth-of-type(3)").exists()
+        && card.parent().$("img").exists()) {
+        } else {
+          return Map.of("error", "Some elements are missing");
+        }
+
+        String name = card.$("span[data-testid='components.ProviderCard.providerName']").getText();
+
+        String rating = card.$("div[data-testid='components.ProviderCard.providerRatingBadge'] span:nth-of-type(2)").getText();
+        String reviews = card.$("div[data-testid='components.ProviderCard.providerRatingBadge'] span:nth-of-type(3)").getText();
+        String imageUrl = card.parent().$("img").getAttribute("src");
+
+        var info =  Map.of(
+                "Name", name,
+                "Rating", rating,
+                "Reviews", reviews,
+                "Image URL", imageUrl
+        );
+        var print = String.format("Name: %s, Rating: %s, Reviews: %s, Image URL: %s",
+                info.get("Name"),
+                info.get("Rating"),
+                info.get("Reviews"),
+                info.get("Image URL"));
+        System.out.println(print);
+        return info;
+      } catch (Exception e) {
+        return Map.of("error", e.getMessage());
+      }
     }).collect(Collectors.toList());
 
     String formattedText = providerInfoList.stream()
