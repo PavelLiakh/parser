@@ -10,5 +10,5 @@ public class Food {
     Double foodRating;
     String restaurant;
     Double restaurantRating;
-
+    String imageUrl;
 }
