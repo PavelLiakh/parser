@@ -2,7 +2,6 @@ package uitest;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
-import ee.era.hangman.Launcher;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.openqa.selenium.logging.LogEntry;
@@ -19,7 +18,6 @@ import static com.codeborne.selenide.WebDriverRunner.hasWebDriverStarted;
 
 public abstract class AbstractHangmanTest {
     private static final Logger log = LoggerFactory.getLogger(AbstractHangmanTest.class);
-    private static volatile Launcher launcher;
 
     @BeforeClass
     public synchronized static void startServer() throws Exception {
