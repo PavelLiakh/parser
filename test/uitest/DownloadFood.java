@@ -80,15 +80,27 @@ public class DownloadFood extends AbstractHangmanTest {
         open("https://wolt.com/en/discovery/restaurants");
         Thread.sleep(longDelay);
 
-
+        setWoltAddress();
     }
 
     private void setBoltAddress() throws InterruptedException {
         var address = $$(By.tagName("input")).findBy(attribute("placeholder", "Enter your address"));
         address.setValue(Params.address);
-        Thread.sleep(5000);
+        Thread.sleep(longDelay);
         address.sendKeys(Keys.ARROW_DOWN);
         address.sendKeys(Keys.ENTER);
-        Thread.sleep(6000);
+        Thread.sleep(longDelay);
+    }
+
+    private void setWoltAddress() throws InterruptedException {
+        $$(By.tagName("button")).findBy(attribute("data-test-id", "header.address-select-button")).click();
+        Thread.sleep(longDelay);
+
+        var address = $$(By.tagName("input")).findBy(attribute("placeholder", "Enter your address"));
+        address.setValue(Params.address);
+        Thread.sleep(longDelay);
+        address.sendKeys(Keys.ARROW_DOWN);
+        address.sendKeys(Keys.ENTER);
+        Thread.sleep(longDelay);
     }
 }
