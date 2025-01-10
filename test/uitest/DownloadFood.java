@@ -1,11 +1,10 @@
-package uitest.selenide;
+package uitest;
 
 import com.codeborne.selenide.ElementsCollection;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import uitest.AbstractHangmanTest;
 
 import java.util.List;
 import java.util.Map;
