@@ -13,25 +13,19 @@ import java.util.stream.Collectors;
 import static com.codeborne.selenide.Condition.attribute;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.open;
+import static uitest.Params.longDelay;
 
 public class DownloadFood extends AbstractHangmanTest {
     @Before
     public void startGame() {
-
     }
 
 
     @Test
-    public void testresult() throws InterruptedException {
+    public void testresult_bolt() throws InterruptedException {
         open("https://bolt.eu/en-ge/food/");
         Thread.sleep(5000);
-        var address = $$(By.tagName("input")).findBy(attribute("placeholder", "Enter your address"));
-//address.scrollTo();
-        address.setValue("Otar Oniashvillis 30");
-        Thread.sleep(5000);
-        address.sendKeys(Keys.ARROW_DOWN);
-        address.sendKeys(Keys.ENTER);
-        Thread.sleep(6000);
+        setBoltAddress();
 
         ElementsCollection providerCards = $$("div[data-testid='components.ProviderCard.view']");
 
@@ -79,5 +73,22 @@ public class DownloadFood extends AbstractHangmanTest {
                 .collect(Collectors.joining("\n"));
 
         System.out.println(formattedText);
+    }
+
+    @Test
+    public void download_food_wolt() throws InterruptedException {
+        open("https://wolt.com/en/discovery/restaurants");
+        Thread.sleep(longDelay);
+
+
+    }
+
+    private void setBoltAddress() throws InterruptedException {
+        var address = $$(By.tagName("input")).findBy(attribute("placeholder", "Enter your address"));
+        address.setValue(Params.address);
+        Thread.sleep(5000);
+        address.sendKeys(Keys.ARROW_DOWN);
+        address.sendKeys(Keys.ENTER);
+        Thread.sleep(6000);
     }
 }
