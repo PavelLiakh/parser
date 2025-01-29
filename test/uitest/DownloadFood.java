@@ -2,11 +2,16 @@ package uitest;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +41,7 @@ public class DownloadFood extends AbstractHangmanTest {
         Thread.sleep(shortDelay);
 
 //        setWoltAddress();
-//        Thread.sleep(longDelay);
+        Thread.sleep(longDelay);
 //        setWoltFilter();
 //        Thread.sleep(longDelay);
         downloadWoltFood();
@@ -59,21 +64,24 @@ public class DownloadFood extends AbstractHangmanTest {
 
     private void downloadWoltFood() {
         var allShops = $$(By.xpath("//*[@data-test-id='VenueVerticalListGrid']")).get(0);
+        FoodDataWriter.writeToCSV(foodRecords);
+
 
         ElementsCollection shopTiles = $$(By.xpath("//*[@data-variant='dense']"));
         for (SelenideElement shopTile : shopTiles) {
-            Map<String, String> shopData = parseShopTile(shopTile);
-            FoodDataWriter.FoodRecord foodRecord =  new FoodDataWriter.FoodRecord();
+            shopTile.scrollTo();
+            var shopData = parseShopTile(shopTile);
+            var foods = getShopFood(shopData.get("link"));
+
+            foods.forEach(food -> food.putAll(shopData));
+            FoodDataWriter.FoodRecord foodRecord = new FoodDataWriter.FoodRecord();
             foodRecord.site = "Wolt";
             foodRecord.shopName = shopData.get("shopName");
             foodRecord.link = shopData.get("link");
             foodRecords.add(foodRecord);
+
+            FoodDataWriter.appendToCSV(foodRecord);
         }
-
-
-        FoodDataWriter.writeToCSV(foodRecords);
-        int a =0;
-
     }
 
     private static Map<String, String> parseShopTile(SelenideElement shopTile) {
@@ -85,6 +93,35 @@ public class DownloadFood extends AbstractHangmanTest {
         shopData.put("link", link.getAttribute("href"));
 
         return shopData;
+    }
+
+    private List<Map<String, String>> getShopFood(String shopLink) {
+        // Download the HTML page
+        var url = shopLink + "/collections/popular";
+        Document doc;
+        try {
+            doc = Jsoup.connect(url).get();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Find all elements with data-test-id="ItemCard"
+        Elements itemCards = doc.select("[data-test-id=ItemCard]");
+
+        List<Map<String, String>> result = new ArrayList<>();
+
+        // Extract and print name and price for each item card
+        for (Element card : itemCards) {
+            String name = card.select("[data-test-id=ImageCentricProductCard\\.Title]").text();
+            String price = card.select("[data-test-id=ImageCentricProductCardPrice]").text();
+
+            var food = new HashMap<String, String>();
+            food.put("name", name);
+            food.put("price", price);
+            result.add(food);
+        }
+
+        return result;
     }
 
 

@@ -12,24 +12,27 @@ public class FoodDataWriter {
 
     public static void writeToCSV(List<FoodRecord> foodRecords) {
         String fileName = generateFileName();
+        var isFirstWrite = currentFileName == null;
         currentFileName = fileName;
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
-            writeHeader(writer);
+            if (isFirstWrite) {
+                writeHeader(writer);
+            }
             writeRecords(writer, foodRecords);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void appendToCSV(List<FoodRecord> foodRecords) {
+    public static void appendToCSV(FoodRecord foodRecord) {
         if (currentFileName == null) {
-            writeToCSV(foodRecords);
+            writeToCSV(List.of(foodRecord));
             return;
         }
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(currentFileName, true))) {
-            writeRecords(writer, foodRecords);
+            writeRecords(writer, List.of(foodRecord));
         } catch (IOException e) {
             e.printStackTrace();
         }
