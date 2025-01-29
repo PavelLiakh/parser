@@ -36,10 +36,10 @@ public class DownloadFood extends AbstractHangmanTest {
         open("https://wolt.com/en/discovery/restaurants");
         Thread.sleep(shortDelay);
 
-//        setWoltAddress();
+        setWoltAddress();
         Thread.sleep(longDelay);
-//        setWoltFilter();
-//        Thread.sleep(longDelay);
+        setWoltFilter();
+        Thread.sleep(longDelay);
         downloadWoltFood();
     }
 
@@ -58,7 +58,6 @@ public class DownloadFood extends AbstractHangmanTest {
 
     private void downloadWoltFood() throws InterruptedException {
         FoodDataWriter.writeToCSV(new ArrayList<>());
-
 
         List<Map<String, String>> shops = new ArrayList<>();
         ElementsCollection shopTiles = $$(By.xpath("//*[@data-variant='dense']"));
