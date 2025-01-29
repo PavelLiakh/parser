@@ -62,26 +62,50 @@ public class DownloadFood extends AbstractHangmanTest {
         downloadWoltFood();
     }
 
-    private void downloadWoltFood() {
+    private void downloadWoltFood() throws InterruptedException {
         var allShops = $$(By.xpath("//*[@data-test-id='VenueVerticalListGrid']")).get(0);
-        FoodDataWriter.writeToCSV(foodRecords);
+        FoodDataWriter.writeToCSV(new ArrayList<>());
 
 
+        List<Map<String, String>> shops = new ArrayList<>();
         ElementsCollection shopTiles = $$(By.xpath("//*[@data-variant='dense']"));
         for (SelenideElement shopTile : shopTiles) {
             shopTile.scrollTo();
-            var shopData = parseShopTile(shopTile);
-            var foods = getShopFood(shopData.get("link"));
-
-            foods.forEach(food -> food.putAll(shopData));
-            FoodDataWriter.FoodRecord foodRecord = new FoodDataWriter.FoodRecord();
-            foodRecord.site = "Wolt";
-            foodRecord.shopName = shopData.get("shopName");
-            foodRecord.link = shopData.get("link");
-            foodRecords.add(foodRecord);
-
-            FoodDataWriter.appendToCSV(foodRecord);
+            shops.add(parseShopTile(shopTile));
         }
+
+        for (Map<String, String> shopData : shops) {
+            downloadShopFood(shopData);
+        }
+    }
+
+    private void downloadShopFood(Map<String, String> shopData) throws InterruptedException {
+        var link = shopData.get("link");
+
+        open(link + "/collections/popular");
+        Thread.sleep(longDelay);
+
+        $$(By.xpath("//*[@data-test-id='ItemCard']"))
+                .stream()
+                .toList()
+                .forEach(food ->
+                        getAndSaveFood(shopData, food)
+                );
+    }
+
+    private void getAndSaveFood(Map<String, String> shopData, SelenideElement foodTile) {
+        foodTile.scrollTo();
+        String name = foodTile.find(By.cssSelector("[data-test-id='ItemCard-name']")).getText();
+        String price = foodTile.find(By.cssSelector("[data-test-id='ItemCard-price']")).getText();
+
+        FoodDataWriter.FoodRecord foodRecord = new FoodDataWriter.FoodRecord();
+        foodRecord.site = "Wolt";
+        foodRecord.shopName = shopData.get("shopName");
+        foodRecord.link = shopData.get("link");
+        foodRecord.name = name;
+        foodRecord.price = price;
+
+        FoodDataWriter.appendToCSV(foodRecord);
     }
 
     private static Map<String, String> parseShopTile(SelenideElement shopTile) {
@@ -95,34 +119,6 @@ public class DownloadFood extends AbstractHangmanTest {
         return shopData;
     }
 
-    private List<Map<String, String>> getShopFood(String shopLink) {
-        // Download the HTML page
-        var url = shopLink + "/collections/popular";
-        Document doc;
-        try {
-            doc = Jsoup.connect(url).get();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        // Find all elements with data-test-id="ItemCard"
-        Elements itemCards = doc.select("[data-test-id=ItemCard]");
-
-        List<Map<String, String>> result = new ArrayList<>();
-
-        // Extract and print name and price for each item card
-        for (Element card : itemCards) {
-            String name = card.select("[data-test-id=ImageCentricProductCard\\.Title]").text();
-            String price = card.select("[data-test-id=ImageCentricProductCardPrice]").text();
-
-            var food = new HashMap<String, String>();
-            food.put("name", name);
-            food.put("price", price);
-            result.add(food);
-        }
-
-        return result;
-    }
 
 
     private void setBoltAddress() throws InterruptedException {
