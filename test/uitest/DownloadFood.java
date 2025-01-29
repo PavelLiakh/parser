@@ -11,9 +11,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.codeborne.selenide.Condition.attribute;
+import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.open;
 import static uitest.Params.longDelay;
+import static uitest.Params.shortDelay;
 
 public class DownloadFood extends AbstractHangmanTest {
     @Before
@@ -77,9 +79,26 @@ public class DownloadFood extends AbstractHangmanTest {
     @Test
     public void download_food_wolt() throws InterruptedException {
         open("https://wolt.com/en/discovery/restaurants");
-        Thread.sleep(longDelay);
+        Thread.sleep(shortDelay);
 
         setWoltAddress();
+        Thread.sleep(longDelay);
+        setWoltFilter();
+        Thread.sleep(longDelay);
+    }
+
+    private void setWoltFilter() throws InterruptedException {
+        $$(By.xpath("//button[@data-test-id='sorting.button']")).get(0).click();
+        Thread.sleep(shortDelay);
+
+        var priceRange = $$(By.xpath("//label[@data-test-id='categories.price-range-2.label']")).get(0);
+        priceRange.click();
+        priceRange.scrollTo();
+
+//        $$(By.xpath(String.format("//input[@id=//label[text()='%s']/@for]", "Delivery price"))).get(0).click();
+
+        $$(By.xpath("//button[@data-test-id='closeFilterButton']")).get(0).click();
+
     }
 
     private void setBoltAddress() throws InterruptedException {
