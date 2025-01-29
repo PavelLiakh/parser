@@ -96,11 +96,10 @@ public class DownloadFood extends AbstractHangmanTest {
         $$(By.tagName("button")).findBy(attribute("data-test-id", "header.address-select-button")).click();
         Thread.sleep(longDelay);
 
-        var address = $$(By.tagName("input")).findBy(attribute("placeholder", "Enter your address"));
-        address.setValue(Params.address);
+        $$(By.id("address-query-input")).get(0).setValue(Params.address);
         Thread.sleep(longDelay);
-        address.sendKeys(Keys.ARROW_DOWN);
-        address.sendKeys(Keys.ENTER);
+        $$(By.xpath("//*[@role='option']")).get(0).click();
         Thread.sleep(longDelay);
+        $$(By.xpath("//button[@data-test-id='continue-button']")).get(0).click();
     }
 }
