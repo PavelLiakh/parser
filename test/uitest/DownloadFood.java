@@ -55,15 +55,12 @@ public class DownloadFood extends AbstractHangmanTest {
         priceRange.click();
         priceRange.scrollTo();
 
-//        $$(By.xpath(String.format("//input[@id=//label[text()='%s']/@for]", "Delivery price"))).get(0).click();
-
         $$(By.xpath("//button[@data-test-id='closeFilterButton']")).get(0).click();
 
         downloadWoltFood();
     }
 
     private void downloadWoltFood() throws InterruptedException {
-        var allShops = $$(By.xpath("//*[@data-test-id='VenueVerticalListGrid']")).get(0);
         FoodDataWriter.writeToCSV(new ArrayList<>());
 
 
