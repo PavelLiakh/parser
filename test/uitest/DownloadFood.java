@@ -35,10 +35,11 @@ public class DownloadFood extends AbstractHangmanTest {
         open("https://wolt.com/en/discovery/restaurants");
         Thread.sleep(shortDelay);
 
-        setWoltAddress();
-        Thread.sleep(longDelay);
-        setWoltFilter();
-        Thread.sleep(longDelay);
+//        setWoltAddress();
+//        Thread.sleep(longDelay);
+//        setWoltFilter();
+//        Thread.sleep(longDelay);
+        downloadWoltFood();
     }
 
     private void setWoltFilter() throws InterruptedException {

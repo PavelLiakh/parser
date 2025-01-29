@@ -47,14 +47,15 @@ public class FoodDataWriter {
 
     private static void writeRecords(PrintWriter writer, List<FoodRecord> foodRecords) {
         writer.println("Site, Shop Name, Name, Price, Link");
-        for (int i = 0; i < foodRecords.size(); i++) {
-            FoodRecord food = foodRecords.get(i);
-            writer.println(String.format("%s,%s,%s,%s,%s",
+        for (FoodRecord food : foodRecords) {
+            var record = String.format("%s,%s,%s,%s,%s",
                     food.site,
                     food.shopName,
                     food.name,
                     food.price,
-                    food.link));
+                    food.link);
+            record = record.replace("null", "");
+            writer.println(record);
         }
     }
 
