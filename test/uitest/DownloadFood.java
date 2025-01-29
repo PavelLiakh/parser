@@ -4,14 +4,11 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -128,8 +125,6 @@ public class DownloadFood extends AbstractHangmanTest {
 
         return shopData;
     }
-
-
 
     private void setBoltAddress() throws InterruptedException {
         var address = $$(By.tagName("input")).findBy(attribute("placeholder", "Enter your address"));
