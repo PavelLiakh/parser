@@ -95,8 +95,21 @@ public class DownloadFood extends AbstractHangmanTest {
 
     private void getAndSaveFood(Map<String, String> shopData, SelenideElement foodTile) {
         foodTile.scrollTo();
-        String name = foodTile.find(By.cssSelector("[data-test-id='ItemCard-name']")).getText();
-        String price = foodTile.find(By.cssSelector("[data-test-id='ItemCard-price']")).getText();
+        Document doc = Jsoup.parse(foodTile.innerHtml());
+        var name = doc.getAllElements()
+                .stream()
+                .filter(element -> element.text() != null)
+                .filter(element -> element.tagName().equals("h3"))
+                .toList()
+                .get(0)
+                .text();
+
+        var price = doc.getAllElements()
+                .stream()
+                .filter(element -> element.hasAttr("aria-label"))
+                .toList().get(0)
+                .text()
+                .replace("GEL ", "");
 
         FoodDataWriter.FoodRecord foodRecord = new FoodDataWriter.FoodRecord();
         foodRecord.site = "Wolt";

@@ -11,17 +11,18 @@ public class FoodDataWriter {
     private static String currentFileName;
 
     public static void writeToCSV(List<FoodRecord> foodRecords) {
-        String fileName = generateFileName();
         var isFirstWrite = currentFileName == null;
-        currentFileName = fileName;
+        if (isFirstWrite) {
+            currentFileName = generateFileName();
+        }
 
-        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(currentFileName))) {
             if (isFirstWrite) {
                 writeHeader(writer);
             }
             writeRecords(writer, foodRecords);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
