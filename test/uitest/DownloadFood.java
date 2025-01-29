@@ -33,8 +33,14 @@ public class DownloadFood extends AbstractHangmanTest {
 
     @Test
     public void download_food_wolt() throws InterruptedException {
-        open("https://wolt.com/en/discovery/restaurants");
+        open("https://wolt.com/en/geo/tbilisi/restaurants");
         Thread.sleep(shortDelay);
+
+        var agreedToCookies = $$(By.xpath("//button[@data-test-id='allow-button']"));
+        if (agreedToCookies.size() > 0) {
+            agreedToCookies.get(0).click();
+            Thread.sleep(shortDelay);
+        }
 
         setWoltAddress();
         Thread.sleep(longDelay);
