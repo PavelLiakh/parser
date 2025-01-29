@@ -17,12 +17,11 @@ import static uitest.Params.longDelay;
 
 public class DownloadFood extends AbstractHangmanTest {
     @Before
-    public void startGame() {
+    public void prepare_food_download() {
     }
 
-
     @Test
-    public void testresult_bolt() throws InterruptedException {
+    public void download_food_bolt() throws InterruptedException {
         open("https://bolt.eu/en-ge/food/");
         Thread.sleep(5000);
         setBoltAddress();
