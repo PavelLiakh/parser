@@ -21,7 +21,6 @@ import static uitest.Params.longDelay;
 import static uitest.Params.shortDelay;
 
 public class DownloadFood extends AbstractHangmanTest {
-    List<FoodDataWriter.FoodRecord> foodRecords = new ArrayList<>();
 
     @Before
     public void prepare_food_download() {
