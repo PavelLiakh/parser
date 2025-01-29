@@ -27,15 +27,10 @@ public class FoodDataWriter {
     }
 
     public static void appendToCSV(FoodRecord foodRecord) {
-        if (currentFileName == null) {
-            writeToCSV(List.of(foodRecord));
-            return;
-        }
-
         try (PrintWriter writer = new PrintWriter(new FileWriter(currentFileName, true))) {
             writeRecords(writer, List.of(foodRecord));
         } catch (IOException e) {
-            e.printStackTrace();
+           throw new RuntimeException(e);
         }
     }
 
@@ -50,7 +45,6 @@ public class FoodDataWriter {
     }
 
     private static void writeRecords(PrintWriter writer, List<FoodRecord> foodRecords) {
-        writer.println("Site, Shop Name, Name, Price, Link");
         for (FoodRecord food : foodRecords) {
             var record = String.format("%s,%s,%s,%s,%s",
                     food.site,
@@ -60,6 +54,7 @@ public class FoodDataWriter {
                     food.link);
             record = record.replace("null", "");
             writer.println(record);
+            writer.flush();
         }
     }
 
@@ -69,7 +64,6 @@ public class FoodDataWriter {
         String name;
         String price;
         String link;
-        String deliveryTime;
     }
 
 }
