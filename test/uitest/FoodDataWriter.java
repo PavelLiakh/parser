@@ -49,7 +49,7 @@ public class FoodDataWriter {
         writer.println("Site, Shop Name, Name, Price, Link");
         for (int i = 0; i < foodRecords.size(); i++) {
             FoodRecord food = foodRecords.get(i);
-            writer.println(String.format("%s,%s,%s,%s,%s,%s",
+            writer.println(String.format("%s,%s,%s,%s,%s",
                     food.site,
                     food.shopName,
                     food.name,
@@ -64,6 +64,7 @@ public class FoodDataWriter {
         String name;
         String price;
         String link;
+        String deliveryTime;
     }
 
 }
