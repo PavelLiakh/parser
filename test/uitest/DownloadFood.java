@@ -63,8 +63,10 @@ public class DownloadFood extends AbstractHangmanTest {
         ElementsCollection shopTiles = $$(By.xpath("//*[@data-variant='dense']"));
         for (SelenideElement shopTile : shopTiles) {
             Map<String, String> shopData = parseShopTile(shopTile);
-            FoodDataWriter.FoodRecord foodRecord = buildFoodRecord(shopData);
+            FoodDataWriter.FoodRecord foodRecord =  new FoodDataWriter.FoodRecord();
             foodRecord.site = "Wolt";
+            foodRecord.shopName = shopData.get("shopName");
+            foodRecord.link = shopData.get("link");
             foodRecords.add(foodRecord);
         }
 
@@ -81,18 +83,8 @@ public class DownloadFood extends AbstractHangmanTest {
 
         shopData.put("shopName", link.text());
         shopData.put("link", link.getAttribute("href"));
-//        shopData.put("deliveryTime", "//div[matches(text(), '^\\d{1,2}-\\d{1,2}$')]");
 
         return shopData;
-    }
-
-    private static FoodDataWriter.FoodRecord buildFoodRecord(Map<String, String> shopData) {
-        FoodDataWriter.FoodRecord foodRecord = new FoodDataWriter.FoodRecord();
-        foodRecord.shopName = shopData.get("shopName");
-        foodRecord.name = shopData.get("category");
-        foodRecord.price = shopData.get("price");
-        foodRecord.link = shopData.get("link");
-        return foodRecord;
     }
 
 
