@@ -29,6 +29,7 @@ public abstract class AbstractHangmanTest {
         logPrefs.enable(LogType.BROWSER, Level.ALL);
         logPrefs.enable(LogType.PERFORMANCE, Level.ALL);
         Configuration.browserCapabilities.setCapability("goog:loggingPrefs", logPrefs);
+        Configuration.browserSize = "1920x1080";
     }
 
     @After
